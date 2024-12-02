@@ -1,0 +1,14 @@
+[
+{
+  "directory": "/Users/laurensschunk/documents/Projects/AOC-2024/build",
+  "command": "/Library/Developer/CommandLineTools/usr/bin/c++  -I/Users/laurensschunk/documents/Projects/AOC-2024/utils -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.1.sdk -o CMakeFiles/utils.dir/utils/utils.cpp.o -c /Users/laurensschunk/documents/Projects/AOC-2024/utils/utils.cpp",
+  "file": "/Users/laurensschunk/documents/Projects/AOC-2024/utils/utils.cpp",
+  "output": "CMakeFiles/utils.dir/utils/utils.cpp.o"
+},
+{
+  "directory": "/Users/laurensschunk/documents/Projects/AOC-2024/build",
+  "command": "/Library/Developer/CommandLineTools/usr/bin/c++  -I/Users/laurensschunk/documents/Projects/AOC-2024/utils -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.1.sdk -o CMakeFiles/day01_part2.dir/day01/part2.cpp.o -c /Users/laurensschunk/documents/Projects/AOC-2024/day01/part2.cpp",
+  "file": "/Users/laurensschunk/documents/Projects/AOC-2024/day01/part2.cpp",
+  "output": "CMakeFiles/day01_part2.dir/day01/part2.cpp.o"
+}
+]
