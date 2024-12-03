@@ -27,12 +27,9 @@ int main(int argc, char *argv[]) {
   while (regex_search(it, input.cend(), match, pattern)) {
     if (match[1].matched && enabled) {
       // Group 2 and Group 3 are integers for mul(x, y)
-      try {
-        int x = stoi(match[2]);
-        int y = stoi(match[3]);
-        total += x * y;
-      } catch (int idc) {
-      }
+      int x = stoi(match[2]);
+      int y = stoi(match[3]);
+      total += x * y;
     } else if (match[4].matched) {
       // Matched do()
       enabled = true;
