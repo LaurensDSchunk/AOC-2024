@@ -1,8 +1,11 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+#include <algorithm>
 #include <fstream>
 #include <iostream>
+#include <math.h>
+#include <regex>
 #include <sstream>
 #include <string>
 #include <vector>
