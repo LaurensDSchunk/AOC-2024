@@ -15,6 +15,7 @@ using namespace std;
 namespace utils {
 void quicksort(vector<int> &arr, int low, int high);
 int abs(int value);
+string fileToString(string filename);
 } // namespace utils
 
 #endif // UTILS_H

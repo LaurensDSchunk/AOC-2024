@@ -40,3 +40,15 @@ int utils::abs(int value) {
   }
   return value;
 }
+
+string utils::fileToString(string filename) {
+  string result;
+  ifstream file(filename);
+  string line;
+  while (getline(file, line)) {
+    result += line + "\n";
+  }
+  result.pop_back();
+
+  return result;
+}
