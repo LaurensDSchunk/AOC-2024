@@ -4,10 +4,12 @@
 #include <algorithm>
 #include <fstream>
 #include <iostream>
+#include <map>
 #include <math.h>
 #include <regex>
 #include <sstream>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 using namespace std;
