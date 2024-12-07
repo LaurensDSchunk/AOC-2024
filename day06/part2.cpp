@@ -1,5 +1,6 @@
 #include "utils.h"
 #include <string>
+#include <vector>
 
 // UNSUCCESSFUL.  I will continue tommorow but its late now so good night
 
@@ -55,13 +56,28 @@ struct Position {
   int x;
   int y;
   Direction facing;
+
+  // Define equality operator
+  bool operator==(const Position &other) const {
+    return x == other.x && y == other.y && facing == other.facing;
+  }
+};
+
+// Define a custom hash function for Position
+struct PositionHash {
+  std::size_t operator()(const Position &pos) const {
+    // Combine the hash of x, y, and facing
+    std::size_t h1 = std::hash<int>()(pos.x);
+    std::size_t h2 = std::hash<int>()(pos.y);
+    std::size_t h3 = std::hash<int>()(static_cast<int>(pos.facing));
+    return h1 ^ (h2 << 1) ^ (h3 << 2); // Combine hashes with bit shifts
+  }
 };
 
 Position newPosExtra;
 
 // Returns if still in the map
-bool runStep(vector<vector<char>> &map, vector<vector<bool>> &visited,
-             Position &pos) {
+bool runStep(vector<vector<char>> &map, Position &pos) {
   int mapHeight = map.size();
   int mapWidth = map.at(0).size();
   Direction facing = pos.facing;
@@ -79,7 +95,6 @@ bool runStep(vector<vector<char>> &map, vector<vector<bool>> &visited,
     } else {
       guardY--;
     }
-    visited.at(guardY).at(guardX) = true;
     break;
   case RIGHT:
     if (guardX == mapWidth - 1) {
@@ -91,7 +106,6 @@ bool runStep(vector<vector<char>> &map, vector<vector<bool>> &visited,
     } else {
       guardX++;
     }
-    visited.at(guardY).at(guardX) = true;
     break;
   case DOWN:
     if (guardY == mapHeight - 1) {
@@ -103,7 +117,6 @@ bool runStep(vector<vector<char>> &map, vector<vector<bool>> &visited,
     } else {
       guardY++;
     }
-    visited.at(guardY).at(guardX) = true;
     break;
   case LEFT:
     if (guardX == 0) {
@@ -115,12 +128,32 @@ bool runStep(vector<vector<char>> &map, vector<vector<bool>> &visited,
     } else {
       guardX--;
     }
-    visited.at(guardY).at(guardX) = true;
     break;
   }
   Position newPos{guardX, guardY, facing};
-  newPosExtra = newPos;
+  pos = newPos;
   return true;
+}
+
+void fillVisited(vector<vector<char>> &map, vector<vector<bool>> &visited,
+                 Position startPos) {
+  while (runStep(map, startPos)) {
+    visited.at(startPos.y).at(startPos.x) = true;
+  }
+}
+
+bool detectLoop(vector<vector<char>> &map, Position startPos) {
+  unordered_map<Position, int, PositionHash> pastPositions;
+  pastPositions[startPos]++;
+
+  while (runStep(map, startPos)) {
+    if (pastPositions.find(startPos) != pastPositions.end()) {
+      return true;
+    }
+    pastPositions[startPos]++;
+  }
+
+  return false;
 }
 
 int main(int argc, char *argv[]) {
@@ -135,65 +168,41 @@ int main(int argc, char *argv[]) {
   }
 
   vector<vector<char>> map;
+
   int guardX;
   int guardY;
   Direction facing;
 
   initMap(argv[1], map, guardX, guardY, facing);
+
   Position startPos{guardX, guardY, facing};
+  Position currentPos = startPos;
 
   int mapHeight = map.size();
   int mapWidth = map.at(0).size();
+
   vector<vector<bool>> visited(mapHeight, vector<bool>(mapWidth));
-  visited.at(guardY).at(guardX) = true;
-
-  while (runStep(map, visited, startPos)) {
-  }
-
-  for (int y = 0; y < mapHeight; y++) {
-    for (int x = 0; x < mapWidth; x++) {
-      cout << visited.at(y).at(x) << " ";
-    }
-    cout << endl;
-  }
+  fillVisited(map, visited, startPos);
 
   int total = 0;
 
   for (int y = 0; y < mapHeight; y++) {
     for (int x = 0; x < mapWidth; x++) {
-      Position loopPos = startPos;
+      // Has to be visited, cannot be an obstacle, and cannot equal the start
+      // position
+      if (visited.at(y).at(x) == true &&
+          !(y == startPos.y && x == startPos.x)) {
+        map.at(y).at(x) = '#';
 
-      // Ignore existing obstacles and guard spawn
-      if (map.at(y).at(x) == '#' || (y == guardY && x == guardX) ||
-          visited.at(y).at(x) == false)
-        continue;
-
-      map.at(y).at(x) = '#';
-      bool inMap = true;
-      vector<Position> pastPositions;
-      while (inMap) {
-        cout << loopPos.x << " " << loopPos.y << endl;
-        inMap = runStep(map, visited, loopPos);
-        loopPos = newPosExtra;
-        cout << loopPos.x << " " << loopPos.y << endl;
-
-        for (int i = 0; i < pastPositions.size(); i++) {
-          Position pos = pastPositions.at(i);
-          if (pos.x == loopPos.x && pos.y == loopPos.y &&
-              pos.facing == loopPos.facing) {
-            // Loop achived
-            total++;
-            inMap = false;
-          }
+        if (detectLoop(map, startPos)) {
+          total++;
         }
-        // No loop found yet
-        pastPositions.push_back(loopPos);
-      }
 
-      map.at(y).at(x) = '.';
+        map.at(y).at(x) = '.';
+      }
     }
   }
-
   cout << total << endl;
+
   return 0;
 }
