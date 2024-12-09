@@ -3,29 +3,6 @@
 #include <cstddef>
 #include <string>
 
-int runLen(vector<int> &vec, int start, bool forwards) {
-  int first = vec.at(start);
-  int len = 0;
-  if (forwards) {
-    for (int i = start; i < vec.size(); i++) {
-      if (vec.at(i) == first) {
-        len++;
-      } else {
-        return len;
-      }
-    }
-  } else {
-    for (int i = start; i >= 0; i--) {
-      if (vec.at(i) == first) {
-        len++;
-      } else {
-        return len;
-      }
-    }
-  }
-  return len;
-}
-
 int main(int argc, char *argv[]) {
   if (argc != 2) {
     return 1;

@@ -8,6 +8,16 @@ fi
 DAY=$1
 PART=$2
 
+# Check for optional development parameter
+DEV=${3:-0} # Defaults to 0 if not provided
+
+# Set input file based on development parameter
+if [ "$DEV" -eq 1 ]; then
+  INPUT_FILE="test.txt"
+else
+  INPUT_FILE="input.txt"
+fi
+
 # Create a build directory if it doesn't exist
 mkdir -p build
 
@@ -25,7 +35,7 @@ EXECUTABLE="day${DAY}/day${DAY}_part${PART}"
 PATH="day${DAY}"
 
 if [ -f "$EXECUTABLE" ]; then
-  ./$EXECUTABLE "${PATH}/input.txt"
+  ./$EXECUTABLE "${PATH}/${INPUT_FILE}"
 else
   echo "Executable not found: $EXECUTABLE"
   exit 1
