@@ -9,10 +9,7 @@ DAY=$1
 PART=$2
 
 # Check for optional development parameter
-DEV=${3:-0} # Defaults to 0 if not provided
-
-# Set input file based on development parameter
-if [ "$DEV" -eq 1 ]; then
+if [ "$3" == "DEV" ]; then
   INPUT_FILE="test.txt"
 else
   INPUT_FILE="input.txt"
